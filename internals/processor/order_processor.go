@@ -26,6 +26,7 @@ func NewOrderProcessor() *OrderProcessor {
 
 	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddFreeShippingOrderLabel{})
 	orderProcessor.addConfig(rule.HasCategory{Category: "appliance"}, action.AddFragileOrderLabel{})
+	orderProcessor.addConfig(rule.HasCategory{Category: "kids"}, action.AddGiftOrderLabel{})
 
 	return &orderProcessor
 }

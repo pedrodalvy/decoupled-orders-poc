@@ -40,4 +40,20 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 		require.Equal(t, product, order.Product)
 		require.Equal(t, payment, order.Payment)
 	})
+
+	t.Run("should add gift label when product category is kids", func(t *testing.T) {
+		// ARRANGE
+		product := entity.Product{Category: "kids", Value: 1000}
+		payment := entity.Payment{Method: "any", Value: 1000}
+
+		expectedLabels := []string{"gift"}
+
+		// ACT
+		order := createOrderUC.Execute(product, payment)
+
+		// ASSERT
+		require.Equal(t, expectedLabels, order.Labels)
+		require.Equal(t, product, order.Product)
+		require.Equal(t, payment, order.Payment)
+	})
 }
