@@ -24,4 +24,20 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 		require.Equal(t, product, order.Product)
 		require.Equal(t, payment, order.Payment)
 	})
+
+	t.Run("should add fragile label when product category is appliance", func(t *testing.T) {
+		// ARRANGE
+		product := entity.Product{Category: "appliance", Value: 1000}
+		payment := entity.Payment{Method: "any", Value: 1000}
+
+		expectedLabels := []string{"fragile"}
+
+		// ACT
+		order := createOrderUC.Execute(product, payment)
+
+		// ASSERT
+		require.Equal(t, expectedLabels, order.Labels)
+		require.Equal(t, product, order.Product)
+		require.Equal(t, payment, order.Payment)
+	})
 }
