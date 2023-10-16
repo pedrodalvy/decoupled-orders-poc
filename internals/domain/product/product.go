@@ -1,4 +1,4 @@
-package entity
+package product
 
 const ApplianceCategory = "appliance"
 const KidsCategory = "kids"

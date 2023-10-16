@@ -1,11 +1,13 @@
 package entity
 
+import "github.com/pedrodalvy/decoupled-orders-poc/internals/domain/product"
+
 const FreeShippingLabel = "free-shipping"
 const FragileLabel = "fragile"
 const GiftLabel = "gift"
 
 type Order struct {
-	Product Product
+	Product product.Product
 	Payment Payment
 	Labels  []string
 }

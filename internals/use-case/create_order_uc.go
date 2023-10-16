@@ -1,6 +1,7 @@
 package useCase
 
 import (
+	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/product"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/entity"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/processor"
 )
@@ -15,7 +16,7 @@ func NewCreateOrderUC() *CreateOrderUC {
 	}
 }
 
-func (c CreateOrderUC) Execute(product entity.Product, payment entity.Payment) entity.Order {
+func (c CreateOrderUC) Execute(product product.Product, payment entity.Payment) entity.Order {
 	order := entity.Order{Product: product, Payment: payment}
 
 	for _, config := range c.orderProcessor.Config {
