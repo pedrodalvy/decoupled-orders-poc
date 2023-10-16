@@ -9,66 +9,70 @@ import (
 func TestCreateOrderUC_Execute(t *testing.T) {
 	createOrderUC := NewCreateOrderUC()
 
-	t.Run("should create an order with free shipping label", func(t *testing.T) {
-		// ARRANGE
-		product := entity.Product{Category: "any", Value: 1001}
-		payment := entity.Payment{Method: "any", Value: 1001}
+	testCases := []struct {
+		name     string
+		product  entity.Product
+		payment  entity.Payment
+		expected entity.Order
+	}{
+		{
+			name:    "should create an order with free shipping label",
+			product: entity.Product{Category: "any", Value: 1001},
+			payment: entity.Payment{Method: "any", Value: 1001},
+			expected: entity.Order{
+				Product: entity.Product{Category: "any", Value: 1001},
+				Payment: entity.Payment{Method: "any", Value: 1001},
+				Labels:  []string{entity.FreeShippingLabel},
+			},
+		},
+		{
+			name:    "should add fragile label when product category is appliance",
+			product: entity.Product{Category: entity.ApplianceCategory, Value: 1000},
+			payment: entity.Payment{Method: "any", Value: 1000},
+			expected: entity.Order{
+				Product: entity.Product{Category: entity.ApplianceCategory, Value: 1000},
+				Payment: entity.Payment{Method: "any", Value: 1000},
+				Labels:  []string{entity.FragileLabel},
+			},
+		},
+		{
+			name:    "should add gift label when product category is kids",
+			product: entity.Product{Category: entity.KidsCategory, Value: 1000},
+			payment: entity.Payment{Method: "any", Value: 1000},
+			expected: entity.Order{
+				Product: entity.Product{Category: entity.KidsCategory, Value: 1000},
+				Payment: entity.Payment{Method: "any", Value: 1000},
+				Labels:  []string{entity.GiftLabel},
+			},
+		},
+		{
+			name:    "should apply 10% discount when payment method is pix",
+			product: entity.Product{Category: "any", Value: 1000},
+			payment: entity.Payment{Method: entity.PixMethod, Value: 1000},
+			expected: entity.Order{
+				Product: entity.Product{Category: "any", Value: 1000},
+				Payment: entity.Payment{Method: entity.PixMethod, Value: 900},
+			},
+		},
+		{
+			name:    "should apply many actions",
+			product: entity.Product{Category: entity.ApplianceCategory, Value: 2000},
+			payment: entity.Payment{Method: entity.PixMethod, Value: 2000},
+			expected: entity.Order{
+				Product: entity.Product{Category: entity.ApplianceCategory, Value: 2000},
+				Payment: entity.Payment{Method: entity.PixMethod, Value: 1800},
+				Labels:  []string{entity.FreeShippingLabel, entity.FragileLabel},
+			},
+		},
+	}
 
-		expectedLabels := []string{entity.FreeShippingLabel}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			// ACT
+			order := createOrderUC.Execute(testCase.product, testCase.payment)
 
-		// ACT
-		order := createOrderUC.Execute(product, payment)
-
-		// ASSERT
-		require.Equal(t, expectedLabels, order.Labels)
-		require.Equal(t, product, order.Product)
-		require.Equal(t, payment, order.Payment)
-	})
-
-	t.Run("should add fragile label when product category is appliance", func(t *testing.T) {
-		// ARRANGE
-		product := entity.Product{Category: entity.ApplianceCategory, Value: 1000}
-		payment := entity.Payment{Method: "any", Value: 1000}
-
-		expectedLabels := []string{entity.FragileLabel}
-
-		// ACT
-		order := createOrderUC.Execute(product, payment)
-
-		// ASSERT
-		require.Equal(t, expectedLabels, order.Labels)
-		require.Equal(t, product, order.Product)
-		require.Equal(t, payment, order.Payment)
-	})
-
-	t.Run("should add gift label when product category is kids", func(t *testing.T) {
-		// ARRANGE
-		product := entity.Product{Category: entity.KidsCategory, Value: 1000}
-		payment := entity.Payment{Method: "any", Value: 1000}
-
-		expectedLabels := []string{entity.GiftLabel}
-
-		// ACT
-		order := createOrderUC.Execute(product, payment)
-
-		// ASSERT
-		require.Equal(t, expectedLabels, order.Labels)
-		require.Equal(t, product, order.Product)
-		require.Equal(t, payment, order.Payment)
-	})
-
-	t.Run("should add 10% discount when payment method is pix", func(t *testing.T) {
-		// ARRANGE
-		product := entity.Product{Category: "any", Value: 1000}
-		payment := entity.Payment{Method: entity.PixMethod, Value: 1000}
-
-		// ACT
-		order := createOrderUC.Execute(product, payment)
-
-		// ASSERT
-		require.Empty(t, order.Labels)
-		require.Equal(t, product, order.Product)
-		require.Equal(t, payment.Method, order.Payment.Method)
-		require.Equal(t, 900, order.Payment.Value)
-	})
+			// ASSERT
+			require.Equal(t, testCase.expected, order)
+		})
+	}
 }
