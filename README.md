@@ -20,3 +20,40 @@ existing company implementation currently comprises complex and hard-to-maintain
 - If the payment method is `PIX`, provide a 10% discount.
 
 The implemented code should be flexible so that new rules can be easily added and removed.
+
+## Solution
+
+To address the complex and hard-to-maintain code with numerous if/else statements, a flexible and
+extensible solution was developed using a rules and actions system. 
+This allows developers to easily add or remove rules without the need to modify the core codebase.
+
+The solution consists of the following files:
+
+```shell
+internals/domain/order/processor
+├── action
+│    ├── add_order_label.go
+│    └── apply_payment_discount.go
+├── rule
+│    ├── has_category.go
+│    ├── has_payment_method.go
+│    └── min_value.go
+└── order_processor.go
+```
+
+To implement the rules, the following code is used:
+
+```go
+//...
+func NewOrderProcessor() *OrderProcessor {
+    orderProcessor := OrderProcessor{}
+    
+    orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: order.FreeShippingLabel})
+    orderProcessor.addConfig(rule.HasCategory{Category: product.ApplianceCategory}, action.AddOrderLabel{Label: order.FragileLabel})
+    orderProcessor.addConfig(rule.HasCategory{Category: product.KidsCategory}, action.AddOrderLabel{Label: order.GiftLabel})
+    orderProcessor.addConfig(rule.HasPaymentMethod{Method: payment.PixMethod}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
+    
+    return &orderProcessor
+}
+//...
+```
