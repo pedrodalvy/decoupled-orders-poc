@@ -1,4 +1,4 @@
-package entity
+package order
 
 import (
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/payment"

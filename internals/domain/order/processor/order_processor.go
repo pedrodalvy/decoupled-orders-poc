@@ -1,19 +1,19 @@
 package processor
 
 import (
+	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/order"
+	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/order/processor/action"
+	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/order/processor/rule"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/payment"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/product"
-	"github.com/pedrodalvy/decoupled-orders-poc/internals/entity"
-	"github.com/pedrodalvy/decoupled-orders-poc/internals/processor/action"
-	"github.com/pedrodalvy/decoupled-orders-poc/internals/processor/rule"
 )
 
 type Rule interface {
-	Satisfy(order entity.Order) bool
+	Satisfy(order order.Order) bool
 }
 
 type Action interface {
-	Execute(order entity.Order) entity.Order
+	Execute(order order.Order) order.Order
 }
 
 type OrderProcessor struct {
@@ -26,9 +26,9 @@ type OrderProcessor struct {
 func NewOrderProcessor() *OrderProcessor {
 	orderProcessor := OrderProcessor{}
 
-	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: entity.FreeShippingLabel})
-	orderProcessor.addConfig(rule.HasCategory{Category: product.ApplianceCategory}, action.AddOrderLabel{Label: entity.FragileLabel})
-	orderProcessor.addConfig(rule.HasCategory{Category: product.KidsCategory}, action.AddOrderLabel{Label: entity.GiftLabel})
+	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: order.FreeShippingLabel})
+	orderProcessor.addConfig(rule.HasCategory{Category: product.ApplianceCategory}, action.AddOrderLabel{Label: order.FragileLabel})
+	orderProcessor.addConfig(rule.HasCategory{Category: product.KidsCategory}, action.AddOrderLabel{Label: order.GiftLabel})
 	orderProcessor.addConfig(rule.HasPaymentMethod{Method: payment.PixMethod}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
 
 	return &orderProcessor
