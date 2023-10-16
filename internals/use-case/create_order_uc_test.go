@@ -56,4 +56,19 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 		require.Equal(t, product, order.Product)
 		require.Equal(t, payment, order.Payment)
 	})
+
+	t.Run("should add 10% discount when payment method is pix", func(t *testing.T) {
+		// ARRANGE
+		product := entity.Product{Category: "any", Value: 1000}
+		payment := entity.Payment{Method: "pix", Value: 1000}
+
+		// ACT
+		order := createOrderUC.Execute(product, payment)
+
+		// ASSERT
+		require.Empty(t, order.Labels)
+		require.Equal(t, product, order.Product)
+		require.Equal(t, payment.Method, order.Payment.Method)
+		require.Equal(t, 900, order.Payment.Value)
+	})
 }
