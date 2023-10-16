@@ -24,9 +24,9 @@ type OrderProcessor struct {
 func NewOrderProcessor() *OrderProcessor {
 	orderProcessor := OrderProcessor{}
 
-	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddFreeShippingOrderLabel{})
-	orderProcessor.addConfig(rule.HasCategory{Category: "appliance"}, action.AddFragileOrderLabel{})
-	orderProcessor.addConfig(rule.HasCategory{Category: "kids"}, action.AddGiftOrderLabel{})
+	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: "free-shipping"})
+	orderProcessor.addConfig(rule.HasCategory{Category: "appliance"}, action.AddOrderLabel{Label: "fragile"})
+	orderProcessor.addConfig(rule.HasCategory{Category: "kids"}, action.AddOrderLabel{Label: "gift"})
 	orderProcessor.addConfig(rule.HasPaymentMethod{Method: "pix"}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
 
 	return &orderProcessor
