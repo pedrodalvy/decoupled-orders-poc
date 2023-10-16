@@ -1,5 +1,7 @@
 package entity
 
+const PixMethod = "pix"
+
 type Payment struct {
 	Method string
 	Value  int

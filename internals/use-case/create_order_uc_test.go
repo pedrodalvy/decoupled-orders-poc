@@ -14,7 +14,7 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 		product := entity.Product{Category: "any", Value: 1001}
 		payment := entity.Payment{Method: "any", Value: 1001}
 
-		expectedLabels := []string{"free-shipping"}
+		expectedLabels := []string{entity.FreeShippingLabel}
 
 		// ACT
 		order := createOrderUC.Execute(product, payment)
@@ -27,10 +27,10 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 
 	t.Run("should add fragile label when product category is appliance", func(t *testing.T) {
 		// ARRANGE
-		product := entity.Product{Category: "appliance", Value: 1000}
+		product := entity.Product{Category: entity.ApplianceCategory, Value: 1000}
 		payment := entity.Payment{Method: "any", Value: 1000}
 
-		expectedLabels := []string{"fragile"}
+		expectedLabels := []string{entity.FragileLabel}
 
 		// ACT
 		order := createOrderUC.Execute(product, payment)
@@ -43,10 +43,10 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 
 	t.Run("should add gift label when product category is kids", func(t *testing.T) {
 		// ARRANGE
-		product := entity.Product{Category: "kids", Value: 1000}
+		product := entity.Product{Category: entity.KidsCategory, Value: 1000}
 		payment := entity.Payment{Method: "any", Value: 1000}
 
-		expectedLabels := []string{"gift"}
+		expectedLabels := []string{entity.GiftLabel}
 
 		// ACT
 		order := createOrderUC.Execute(product, payment)
@@ -60,7 +60,7 @@ func TestCreateOrderUC_Execute(t *testing.T) {
 	t.Run("should add 10% discount when payment method is pix", func(t *testing.T) {
 		// ARRANGE
 		product := entity.Product{Category: "any", Value: 1000}
-		payment := entity.Payment{Method: "pix", Value: 1000}
+		payment := entity.Payment{Method: entity.PixMethod, Value: 1000}
 
 		// ACT
 		order := createOrderUC.Execute(product, payment)

@@ -1,5 +1,9 @@
 package entity
 
+const FreeShippingLabel = "free-shipping"
+const FragileLabel = "fragile"
+const GiftLabel = "gift"
+
 type Order struct {
 	Product Product
 	Payment Payment

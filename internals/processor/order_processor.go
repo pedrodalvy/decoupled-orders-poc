@@ -24,10 +24,10 @@ type OrderProcessor struct {
 func NewOrderProcessor() *OrderProcessor {
 	orderProcessor := OrderProcessor{}
 
-	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: "free-shipping"})
-	orderProcessor.addConfig(rule.HasCategory{Category: "appliance"}, action.AddOrderLabel{Label: "fragile"})
-	orderProcessor.addConfig(rule.HasCategory{Category: "kids"}, action.AddOrderLabel{Label: "gift"})
-	orderProcessor.addConfig(rule.HasPaymentMethod{Method: "pix"}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
+	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: entity.FreeShippingLabel})
+	orderProcessor.addConfig(rule.HasCategory{Category: entity.ApplianceCategory}, action.AddOrderLabel{Label: entity.FragileLabel})
+	orderProcessor.addConfig(rule.HasCategory{Category: entity.KidsCategory}, action.AddOrderLabel{Label: entity.GiftLabel})
+	orderProcessor.addConfig(rule.HasPaymentMethod{Method: entity.PixMethod}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
 
 	return &orderProcessor
 }
