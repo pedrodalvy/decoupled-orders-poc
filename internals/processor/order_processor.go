@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/payment"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/domain/product"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/entity"
 	"github.com/pedrodalvy/decoupled-orders-poc/internals/processor/action"
@@ -28,7 +29,7 @@ func NewOrderProcessor() *OrderProcessor {
 	orderProcessor.addConfig(rule.MinValue{Value: 1000}, action.AddOrderLabel{Label: entity.FreeShippingLabel})
 	orderProcessor.addConfig(rule.HasCategory{Category: product.ApplianceCategory}, action.AddOrderLabel{Label: entity.FragileLabel})
 	orderProcessor.addConfig(rule.HasCategory{Category: product.KidsCategory}, action.AddOrderLabel{Label: entity.GiftLabel})
-	orderProcessor.addConfig(rule.HasPaymentMethod{Method: entity.PixMethod}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
+	orderProcessor.addConfig(rule.HasPaymentMethod{Method: payment.PixMethod}, action.ApplyPaymentDiscount{DiscountPercentage: 10})
 
 	return &orderProcessor
 }
